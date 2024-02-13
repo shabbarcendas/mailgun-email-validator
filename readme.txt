@@ -29,7 +29,7 @@ So `user.name.abc@yahoo.com` perfectly passes the [is_email()](http://codex.word
 * Ensures that the commenting process is uninterrupted even if Mailgun suffers a [downtime](http://status.mailgun.com)
 * Works completely transparent, nothing changes in the frontend
 
-This plugin requires a Mailgun Public API Key which can be obtained by [signing up at Mailgun](https://mailgun.com/signup).
+This plugin requires a Mailgun Private API Key which can be obtained by [signing up at Mailgun](https://mailgun.com/signup).
 
 If you're trying out this plugin on a local WAMP/LAMP/MAMP installation make sure your system is connected to the Internet for this plugin to contact Mailgun.
 

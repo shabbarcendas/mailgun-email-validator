@@ -1,22 +1,22 @@
 <?php
 /*
 Plugin Name: Mailgun Email Validator
-Plugin URI: https://websistent.com/wordpress-plugins/mailgun-email-validator/
-Description: Kick spam with an highly advanced email validation in comment forms, user registration forms and contact forms using <a href="http://blog.mailgun.com/post/free-email-validation-api-for-web-forms/" target="_blank">Mailgun's Email validation</a> service.
-Author: Jesin
-Version: 1.2.4.1
-Author URI: https://websistent.com/
+Plugin URI: https://odes.pk/
+Description: This plugins is a fork from Jesin's Mailgun verification plugin (https://websistent.com/). It kicks spam with an highly advanced email validation in comment forms, user registration forms and contact forms using <a href="http://blog.mailgun.com/post/free-email-validation-api-for-web-forms/" target="_blank">Mailgun's Email validation</a> service.
+Author: Shabbar Abbas (shabbar.sagit@gmail.com)
+Version: 2.0.0.0
+Author URI: https://odes.pk/
 */
 
 if ( ! function_exists( 'json_decode' ) ) {
 	function json_decode( $string, $assoc = FALSE ) {
-		require_once 'JSON.php';
-		$json = new Services_JSON();
+            require_once 'JSON.php';
+        $json = new Services_JSON();
 
-		if ( $assoc )
-			return (array) $json->decode( $string );
-		else
-			return $json->decode( $string );
+        if ( $assoc )
+            return (array) $json->decode( $string );
+        else
+            return $json->decode( $string );
 	}
 }
 
@@ -61,7 +61,7 @@ if ( ! class_exists( 'Email_Validation_Mailgun' ) ) {
 				)
 			);
 			//Send the email to Mailgun's email validation service
-			$response = wp_remote_request( "https://api.mailgun.net/v3/address/validate?address=".urlencode($emailID), $args );
+			$response = wp_remote_request( "https://api.mailgun.net/v4/address/validate?address=".urlencode($emailID), $args );
 
 			//If there was a HTTP or connection error pass the validation so that the website visitor doesn't know anything
 			if( is_wp_error( $response ) || isset( $response['error'] ) || '200' != $response['response']['code'] )
@@ -69,7 +69,7 @@ if ( ! class_exists( 'Email_Validation_Mailgun' ) ) {
 
 			//Extract the JSON response and return the result
 			$result = json_decode( $response['body'], true );
-			return $result['is_valid'] ? $emailID : false;
+			return $result['result'] == "deliverable" && ('low' == $result['risk'] || 'medium' == $result['risk']) && false == $result['is_disposable_address'] ? $emailID : false;
 		}
 	}
 

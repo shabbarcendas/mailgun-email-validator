@@ -20,7 +20,7 @@ if( !class_exists( 'Email_Validation_Mailgun_Admin' ) )
 			global $email_validation_mailgun;
 			//Displayed if no API key is entered
 			if( !isset( $this->options['mailgun_pubkey_api'] ) || empty( $this->options['mailgun_pubkey_api'] ) )
-				echo '<div class="updated"><p>' . sprintf( __( 'The %s will not work until a %s is entered.', $email_validation_mailgun->slug ), '<a href="'.admin_url( 'options-general.php?page=' . $email_validation_mailgun->slug ).'">Mailgun Email Validator plugin</a>', 'Mailgun Public API key' ) . '</p></div>';
+				echo '<div class="updated"><p>' . sprintf( __( 'The %s will not work until a %s is entered.', $email_validation_mailgun->slug ), '<a href="'.admin_url( 'options-general.php?page=' . $email_validation_mailgun->slug ).'">Mailgun Email Validator plugin</a>', 'Mailgun Private API key' ) . '</p></div>';
 		}
 		
 		public function settings_link( $links )
@@ -50,7 +50,7 @@ if( !class_exists( 'Email_Validation_Mailgun_Admin' ) )
 			global $email_validation_mailgun;
 			register_setting( $email_validation_mailgun->slug.'_options', 'jesin_mailgun_email_validator', array( &$this, 'sanitize_input' ) );
 			add_settings_section( $email_validation_mailgun->slug.'_settings', '', array( &$this, 'dummy_cb'), $email_validation_mailgun->slug);
-			add_settings_field('mailgun_pubkey_api','Mailgun Public API', array( &$this, 'api_field' ), $email_validation_mailgun->slug, $email_validation_mailgun->slug.'_settings', array( 'label_for' => 'mailgun_pubkey_api' ) ); //Public API key field
+			add_settings_field('mailgun_pubkey_api','Mailgun Private API', array( &$this, 'api_field' ), $email_validation_mailgun->slug, $email_validation_mailgun->slug.'_settings', array( 'label_for' => 'mailgun_pubkey_api' ) ); //Public API key field
 		}
 
 		public function plugin_panel_styles()
@@ -129,7 +129,7 @@ jQuery(document).ready(
 			);
 
 			//We are using a static email here as only the API is validated
-			$response = wp_remote_request( "https://api.mailgun.net/v3/address/validate?address=foo%40mailgun.net", $args );
+			$response = wp_remote_request( "https://api.mailgun.net/v4/address/validate?address=foo%40mailgun.net", $args );
 
 			//A Network error has occurred
 			if( is_wp_error($response) )
@@ -171,7 +171,7 @@ jQuery(document).ready(
 			//Someone tries validating without entering the Public API key
 			if( !isset( $this->options['mailgun_pubkey_api'] ) || empty( $this->options['mailgun_pubkey_api'] ) )
 			{
-				echo '<span style="color:red">' . __( 'Please enter a Mailgun Public API and click Save Settings.', $email_validation_mailgun->slug ) . '</span>';
+				echo '<span style="color:red">' . __( 'Please enter a Mailgun Private API and click Save Settings.', $email_validation_mailgun->slug ) . '</span>';
 				die();
 			}
 
@@ -181,7 +181,7 @@ jQuery(document).ready(
 					'Authorization' => 'Basic ' . base64_encode( "api:".$this->options['mailgun_pubkey_api'] )
 				)
 			);
-			$response = wp_remote_request( "https://api.mailgun.net/v3/address/validate?address=" . urlencode( $_POST['email_id'] ), $args );
+			$response = wp_remote_request( "https://api.mailgun.net/v4/address/validate?address=" . urlencode( $_POST['email_id'] ), $args );
 
 			if( is_wp_error($response) )
 			{
@@ -201,7 +201,7 @@ jQuery(document).ready(
 
 			elseif( '200' == $response['response']['code'] )
 			{
-				if($result['is_valid'])
+                if ($result['result'] == "deliverable" && ('low' == $result['risk'] || 'medium' == $result['risk']) && false == $result['is_disposable_address'])
 					echo '<span style="color:green">' . __( 'Address is valid', $email_validation_mailgun->slug ) . '</span>';
 				else
 					echo '<span style="color:red">' . __( 'Address is invalid', $email_validation_mailgun->slug ) . '</span>';
@@ -236,7 +236,7 @@ jQuery(document).ready(
 			echo '<input class="regular_text code" id="mailgun_pubkey_api" name="jesin_mailgun_email_validator[mailgun_pubkey_api]" size="40" type="text" value="'.$api_key.'" required />
 				<input id="mailgun_api_verify" type="button" value="Verify API Key" /><br />
 				<div id="api_output"></div>
-				<p class="description">' . sprintf( __( 'Enter your Mailgun Public API key which is shown at the left under %s after you %slogin%s', $email_validation_mailgun->slug ), '<strong>Account Information</strong>', '<a href="https://mailgun.com/sessions/new">', '</a>' ) . '</p>';
+				<p class="description">' . sprintf( __( 'Enter your Mailgun Private API key which is shown at the left under %s after you %slogin%s', $email_validation_mailgun->slug ), '<strong>Account Information</strong>', '<a href="https://mailgun.com/sessions/new">', '</a>' ) . '</p>';
 		}
 
 		//HTML of the plugin options page

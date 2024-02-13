@@ -75,8 +75,8 @@ msgid "The format of the email address is invalid."
 msgstr "Format email adrese je validan."
 
 #: ../admin_options.php:174
-msgid "Please enter a Mailgun Public API and click Save Settings."
-msgstr "Unesite Mailgun Public API i klik na Sačuvati postavke."
+msgid "Please enter a Mailgun Private API and click Save Settings."
+msgstr "Unesite Mailgun Private API i klik na Sačuvati postavke."
 
 #: ../admin_options.php:196
 msgid "The following error occured"
@@ -98,10 +98,10 @@ msgstr "Invalid API ključ.%s Kod greske: %s %s"
 #: ../admin_options.php:239
 #, php-format
 msgid ""
-"Enter your Mailgun Public API key which is shown at the left under %s after "
+"Enter your Mailgun Private API key which is shown at the left under %s after "
 "you %slogin%s"
 msgstr ""
-"Unesite vaš Mailgun Public API ključ koji je prikazan levo ispod %s after "
+"Unesite vaš Mailgun Private API ključ koji je prikazan levo ispod %s after "
 "you %slogin%s"
 
 #: ../admin_options.php:250

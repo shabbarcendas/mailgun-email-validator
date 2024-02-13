@@ -75,7 +75,7 @@ msgid "The format of the email address is invalid."
 msgstr ""
 
 #: ../admin_options.php:174
-msgid "Please enter a Mailgun Public API and click Save Settings."
+msgid "Please enter a Mailgun Private API and click Save Settings."
 msgstr ""
 
 #: ../admin_options.php:196
@@ -98,7 +98,7 @@ msgstr ""
 #: ../admin_options.php:239
 #, php-format
 msgid ""
-"Enter your Mailgun Public API key which is shown at the left under %s after "
+"Enter your Mailgun Private API key which is shown at the left under %s after "
 "you %slogin%s"
 msgstr ""
 
