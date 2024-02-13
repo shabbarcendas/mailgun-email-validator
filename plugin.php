@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Mailgun Email Validator
-Plugin URI: https://odes.pk/
+Plugin URI: https://cendas.net
 Description: This plugins is a fork from Jesin's Mailgun verification plugin (https://websistent.com/). It kicks spam with an highly advanced email validation in comment forms, user registration forms and contact forms using <a href="http://blog.mailgun.com/post/free-email-validation-api-for-web-forms/" target="_blank">Mailgun's Email validation</a> service.
 Author: Shabbar Abbas (shabbar.sagit@gmail.com)
 Version: 2.0.0.0
-Author URI: https://odes.pk/
+Author URI:  https://cendas.net
 */
 
 if ( ! function_exists( 'json_decode' ) ) {
