@@ -89,6 +89,15 @@ Mailgun has created a [jquery demo](http://mailgun.github.io/validator-demo/) at
 
 == Changelog ==
 
+= 2.1.0.0 =
+* 9th July 2024
+* Added ignore email settings
+
+
+= 2.0.0.0 =
+* Updated plugin to support v4 API
+
+
 = 1.2.4.1 =
 * 19th October 2017
 * Add global variables $pagenow and $wp

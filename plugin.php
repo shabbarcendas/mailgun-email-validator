@@ -4,7 +4,7 @@ Plugin Name: Mailgun Email Validator
 Plugin URI: https://cendas.net
 Description: This plugins is a fork from Jesin's Mailgun verification plugin (https://websistent.com/). It kicks spam with an highly advanced email validation in comment forms, user registration forms and contact forms using <a href="http://blog.mailgun.com/post/free-email-validation-api-for-web-forms/" target="_blank">Mailgun's Email validation</a> service.
 Author: Shabbar Abbas (shabbar.sagit@gmail.com)
-Version: 2.0.0.0
+Version: 2.1.0.0
 Author URI:  https://cendas.net
 */
 
@@ -49,6 +49,18 @@ if ( ! class_exists( 'Email_Validation_Mailgun' ) ) {
 			//If no API was entered don't do anything
 			if( ! isset( $this->options['mailgun_pubkey_api'] ) || empty( $this->options['mailgun_pubkey_api'] ) )
 				return TRUE;
+
+            if( isset( $this->options['mailgun_ignore_mails'] ) && !empty( $this->options['mailgun_ignore_mails'] ) )
+            {
+                $mailgun_ignore_mails = explode(",", $this->options['mailgun_ignore_mails']);
+                if(count($mailgun_ignore_mails) > 0){
+                    $domain = substr(strrchr($emailID , "@"), 1);
+                    // Check if the domain is in the array of allowed domains
+                    if(in_array($domain, $mailgun_ignore_mails)) {
+                        return TRUE;
+                    }
+                }
+            }
 
 			if ( "edit.php" == $pagenow && "shop_order" == $wp->query_vars['post_type'] ) {
 				return true;

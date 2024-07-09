@@ -51,6 +51,7 @@ if( !class_exists( 'Email_Validation_Mailgun_Admin' ) )
 			register_setting( $email_validation_mailgun->slug.'_options', 'jesin_mailgun_email_validator', array( &$this, 'sanitize_input' ) );
 			add_settings_section( $email_validation_mailgun->slug.'_settings', '', array( &$this, 'dummy_cb'), $email_validation_mailgun->slug);
 			add_settings_field('mailgun_pubkey_api','Mailgun Private API', array( &$this, 'api_field' ), $email_validation_mailgun->slug, $email_validation_mailgun->slug.'_settings', array( 'label_for' => 'mailgun_pubkey_api' ) ); //Public API key field
+			add_settings_field('mailgun_ignore_mails','Ignore Emails', array( &$this, 'ignore_emails_field' ), $email_validation_mailgun->slug, $email_validation_mailgun->slug.'_settings', array( 'label_for' => 'mailgun_ignore_mails' ) ); //Public API key field
 		}
 
 		public function plugin_panel_styles()
@@ -181,6 +182,20 @@ jQuery(document).ready(
 					'Authorization' => 'Basic ' . base64_encode( "api:".$this->options['mailgun_pubkey_api'] )
 				)
 			);
+
+            if( isset( $this->options['mailgun_ignore_mails'] ) && !empty( $this->options['mailgun_ignore_mails'] ) )
+            {
+                $mailgun_ignore_mails = explode(",", $this->options['mailgun_ignore_mails']);
+                if(count($mailgun_ignore_mails) > 0){
+                    $domain = substr(strrchr($_POST['email_id'] , "@"), 1);
+                    // Check if the domain is in the array of allowed domains
+                    if(in_array($domain, $mailgun_ignore_mails)) {
+                        echo '<span style="color:red">Provided email is in the list of ignored domains</span>';
+                        die();
+                    }
+                }
+            }
+
 			$response = wp_remote_request( "https://api.mailgun.net/v4/address/validate?address=" . urlencode( $_POST['email_id'] ), $args );
 
 			if( is_wp_error($response) )
@@ -238,6 +253,14 @@ jQuery(document).ready(
 				<div id="api_output"></div>
 				<p class="description">' . sprintf( __( 'Enter your Mailgun Private API key which is shown at the left under %s after you %slogin%s', $email_validation_mailgun->slug ), '<strong>Account Information</strong>', '<a href="https://mailgun.com/sessions/new">', '</a>' ) . '</p>';
 		}
+        public function ignore_emails_field()
+        {
+            global $email_validation_mailgun;
+
+            $ignored_emails = ( (isset($this->options['mailgun_ignore_mails']) && !empty($this->options['mailgun_ignore_mails'])) ? $this->options['mailgun_ignore_mails'] : '' );
+            echo '<input class="regular_text code" id="mailgun_ignore_mails" name="jesin_mailgun_email_validator[mailgun_ignore_mails]" size="40" type="text" value="'.$ignored_emails.'"  />
+                <p class="description">Enter comma separated email domains which are not required to be validated. Example t-online.de, gmail.com etc</p>';
+        }
 
 		//HTML of the plugin options page
 		public function plugin_options()
